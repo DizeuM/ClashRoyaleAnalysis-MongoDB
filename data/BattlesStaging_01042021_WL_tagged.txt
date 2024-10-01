@@ -1,0 +1,3 @@
+Baixe o "BattlesStaging_01042021_WL_tagged.csv" do link abaixo:
+
+https://www.kaggle.com/datasets/bwandowando/clash-royale-season-18-dec-0320-dataset

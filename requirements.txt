@@ -1,0 +1,14 @@
+Django==5.1
+Flask==3.0.3
+html5lib==1.1
+importlib_resources==6.4.2
+Markdown==3.7
+mongoengine==0.29.1
+mypy==1.11.2
+mypy-extensions==1.0.0
+numpy==1.26.4
+pandas==2.2.2
+pandas-datareader==0.10.0
+pandas-stubs==2.2.2.240909
+pymongo==4.9.1
+python-dotenv==1.0.1

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultados de Combos</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-5">Resultados de Combos</h1>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Combo de Cartas</th>
+                    <th>Total de Vitórias</th>
+                    <th>Porcentagem de Vitórias</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for combo in combos %}
+                <tr>
+                    <td>{{ combo._id | join(', ') }}</td>
+                    <td>{{ combo.total_vitorias }}</td>
+                    <td>{{ combo.porcentagem_vitorias | round(2) }}%</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="/" class="btn btn-primary">Voltar</a>
+    </div>
+</body>
+</html>
