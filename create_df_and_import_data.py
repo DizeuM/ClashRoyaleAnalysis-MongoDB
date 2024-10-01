@@ -1,4 +1,5 @@
 import pandas as pd
+from typing import Optional 
 from db import conectar_banco
 
 # Conecta ao banco de dados
@@ -7,7 +8,7 @@ client = conectar_banco()
 if client:
     try:
         # Carrega o arquivo CSV contendo os dados das batalhas
-        df = pd.read_csv('./data/BattlesStaging_01042021_WL_tagged.csv')
+        df: Optional[pd.DataFrame] = pd.read_csv('./data/BattlesStaging_01042021_WL_tagged.csv')
         print("Arquivo .csv carregado com sucesso!")
     except Exception as e:
         # Em caso de erro, imprime a exceção e define df como None
@@ -25,7 +26,6 @@ if client:
 
         
         def criar_deck(row, tipo_jogador):
-            
             return [row[f'{tipo_jogador}.card{i}.id'] for i in range(1, 9)]
 
         # Função para organizar os dados de uma batalha em um dicionário
