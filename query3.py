@@ -25,7 +25,6 @@ def calcular_derrotas_por_combo(combo_cartas, start_time, end_time):
     
     return result[0]['total_derrotas'] if result else 0
 
-# Exemplo de uso
 combo_cartas = [26000001, 26000002, 26000010]  # IDs das cartas no combo
 start_time = datetime(2021, 1, 1)
 end_time = datetime(2021, 12, 31)
