@@ -24,54 +24,25 @@ def criar_pipeline(min_porcentagem, min_vitorias, start_time_str, end_time_str, 
                 ]
             }
         }},
-        {"$unwind": "$vencedor.deck"},
-        {"$group": {
-            "_id": {
-                "deck": "$vencedor.deck",
-                "battleId": "$_id"  # Usando battleId para contar apenas batalhas únicas
-            }
-        }},
-        {"$group": {
-            "_id": "$_id.deck",
-            "total_batalhas": {"$sum": 1},
-            "vitorias": {"$sum": {"$cond": [{ "$eq": ["$winner.tag", "$winner.tag"] }, 1, 0]}},
-        }},
-        {"$project": {
-            "porcentagem_vitorias": {
-                "$multiply": [{"$divide": ["$vitorias", "$total_batalhas"]}, 100]
-            },
-            "deck": "$_id",
-            "total_batalhas": 1,
-            "vitorias": 1
-        }},
-        {"$match": {
-            "porcentagem_vitorias": {"$gte": porcentagem_vitorias}
-        }},
-        {"$sort": {
-            "porcentagem_vitorias": -1
-        }},
-        {"$limit": 10}  # Limite opcional para os resultados
+        {"$match": {"porcentagem_vitorias": {"$gte": min_porcentagem}}}  # Filtra por porcentagem mínima
     ]
 
-    # Log intermediário
-    resultados = list(batalhas_collection.aggregate(pipeline))
-    print("Resultados do pipeline:", resultados)  # Adicione esta linha para ver os resultados intermediários
+def listar_combos_com_vitorias(min_porcentagem, min_vitorias, start_time, end_time, tamanho_combo):
+    
+    start_time_str = start_time.strftime('%Y-%m-%d %H:%M:%S+00:00')
+    end_time_str = end_time.strftime('%Y-%m-%d %H:%M:%S+00:00')
+    
+    pipeline = criar_pipeline(min_porcentagem, min_vitorias, start_time_str, end_time_str, tamanho_combo)
 
-    return resultados
+    # Executa a agregação no MongoDB e retorna os resultados
+    return list(batalhas_collection.aggregate(pipeline, allowDiskUse=True))
 
-# Definindo parâmetros para a consulta
-tamanho_combo = 8  # Defina o tamanho do combo desejado
-porcentagem_vitorias = 60  # Porcentagem mínima de vitórias
-start_time = datetime(2021, 1, 1)  # Data de início
-end_time = datetime(2021, 12, 31)  # Data de fim
 
-# Executando a função e imprimindo os resultados
-resultados = combos_cartas_vitoriosos(tamanho_combo, porcentagem_vitorias, start_time, end_time)  # type: ignore # noqa: F821
+min_vitorias = 650
+min_porcentagem = 90.0
+tamanho_combo = 4  # Tamanho do combo de cartas
+start_time = datetime(2021, 1, 1)
+end_time = datetime(2021, 12, 31)
 
-if resultados:
-    print("Combos de cartas que produziram mais de Y% de vitórias:")
-    for resultado in resultados:
-        print(f"Deck: {resultado['deck']}, Total de Batalhas: {resultado['total_batalhas']}, "
-              f"Vitórias: {resultado['vitorias']}, Porcentagem de Vitórias: {resultado['porcentagem_vitorias']:.2f}%")
-else:
-    print("Nenhum combo de cartas encontrado com as condições especificadas.")
+combos = listar_combos_com_vitorias(min_porcentagem, min_vitorias, start_time, end_time, tamanho_combo)
+print(f"Combos de cartas com mais de {min_porcentagem}% de vitórias: {combos}")
